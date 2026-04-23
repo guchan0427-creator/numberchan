@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あなたの数秘 by number</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(160deg, #f0fefe 0%, #e6f9f9 40%, #fdf0f8 100%);
+  min-height: 100vh;
+  padding: 16px 16px 48px;
+}
+@keyframes wobble { 0%,100%{transform:rotate(-2deg) scale(1)} 50%{transform:rotate(2deg) scale(1.04)} }
+@keyframes bounceIn { 0%{opacity:0;transform:scale(0.75) translateY(16px)} 60%{transform:scale(1.04) translateY(-3px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+@keyframes floatUp { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:translateY(0)} }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+.wobble { animation: wobble 3s ease-in-out infinite; display: inline-block; }
+.btn-main { transition: all 0.2s; box-shadow: 0 5px 0 #009A9A; cursor: pointer; border: none; }
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #009A9A; }
+.btn-main:active { transform: translateY(3px); box-shadow: 0 2px 0 #009A9A; }
+.tab-btn { transition: all 0.15s; cursor: pointer; border: none; }
+.pill { transition: transform 0.15s; display: inline-block; }
+.pill:hover { transform: scale(1.06); }
+input[type=number]:focus, input[type=date]:focus { outline: none; border-color: #00C8C8 !important; }
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+#app { max-width: 420px; margin: 0 auto; }
+
+.header { text-align: center; padding-top: 20px; margin-bottom: 24px; }
+.header h1 { font-size: clamp(26px,7vw,34px); font-weight: 900; color: #00AAAA; letter-spacing: -0.5px; line-height: 1.1; margin-bottom: 5px; }
+.header p { font-size: 13px; font-weight: 700; color: #F9A8C8; letter-spacing: 1px; }
+
+.card {
+  background: white;
+  border-radius: 28px;
+  padding: 24px 20px;
+  box-shadow: 0 8px 32px rgba(0,200,200,0.1);
+  border: 2px solid rgba(0,200,200,0.13);
+  margin-bottom: 16px;
+}
+
+.tabs { display: flex; gap: 7px; margin-bottom: 20px; background: #F5FCFC; border-radius: 15px; padding: 4px; }
+.tab-btn { flex: 1; padding: 9px 4px; border-radius: 12px; font-size: 12px; font-weight: 800; font-family: 'Nunito', sans-serif; }
+
+label { display: block; font-size: 12px; font-weight: 800; color: #00AAAA; margin-bottom: 8px; }
+
+input[type=number], input[type=date] {
+  width: 100%;
+  background: #F5FCFC;
+  border: 2.5px solid #B2EEEE;
+  border-radius: 15px;
+  color: #007777;
+  font-family: 'Nunito', sans-serif;
+  transition: border-color 0.2s;
+}
+input[type=number] { padding: 14px 16px; font-size: 26px; font-weight: 900; text-align: center; }
+input[type=date] { padding: 12px 16px; font-size: 15px; font-weight: 700; }
+
+#lp-display {
+  display: none;
+  margin-top: 10px;
+  background: #F0FAFA;
+  border-radius: 11px;
+  padding: 9px 14px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #00AAAA;
+}
+
+#error-box {
+  display: none;
+  margin-top: 10px;
+  background: #FFF0F5;
+  border: 2px solid #F9A8C8;
+  border-radius: 11px;
+  padding: 9px 14px;
+  text-align: center;
+  color: #E0609A;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.btn-reveal {
+  width: 100%;
+  margin-top: 18px;
+  padding: 16px;
+  background: #00C8C8;
+  border-radius: 17px;
+  color: white;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  font-family: 'Nunito', sans-serif;
+}
+
+#loading { display: none; text-align: center; padding: 40px; animation: pulse 0.5s ease infinite; }
+#loading p { color: #00C8C8; font-weight: 800; margin-top: 10px; font-size: 14px; }
+
+#result { display: none; }
+.result-hero {
+  border-radius: 26px;
+  padding: 28px 20px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.deco1 { position: absolute; top: -28px; right: -28px; width: 110px; height: 110px; border-radius: 50%; }
+.deco2 { position: absolute; bottom: -18px; left: -18px; width: 75px; height: 75px; border-radius: 50%; }
+.master-badge {
+  display: inline-block;
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+.result-emoji { font-size: 48px; margin-bottom: 7px; }
+.result-title { font-size: clamp(26px,7vw,38px); font-weight: 900; margin: 0 0 3px; letter-spacing: -0.5px; }
+.result-sub { font-size: 12px; font-weight: 700; margin: 0 0 18px; letter-spacing: 2px; }
+.keywords { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
+
+.info-card {
+  background: white;
+  border-radius: 22px;
+  padding: 20px;
+  margin-bottom: 11px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+}
+.info-card-header { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; }
+.info-icon { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.info-label { font-size: 13px; font-weight: 900; }
+.info-text { line-height: 1.85; font-weight: 600; color: #444; }
+
+.footer-bar {
+  text-align: center;
+  padding: 14px;
+  background: white;
+  border-radius: 18px;
+  border: 2px dashed #B2EEEE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.footer-bar span { font-size: 11px; font-weight: 800; color: #9ECECE; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="wobble" style="margin-bottom:14px;">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="36" fill="#00C8C8"/>
+        <circle cx="36" cy="36" r="30" fill="white" fill-opacity="0.15"/>
+        <text x="36" y="41" text-anchor="middle" font-family="'Nunito',sans-serif" font-weight="900" font-size="15" fill="white" letter-spacing="0.5">number</text>
+        <circle cx="14" cy="18" r="3" fill="white" fill-opacity="0.7"/>
+        <circle cx="58" cy="52" r="2.5" fill="white" fill-opacity="0.5"/>
+        <circle cx="57" cy="16" r="2" fill="white" fill-opacity="0.6"/>
+        <circle cx="15" cy="55" r="2" fill="white" fill-opacity="0.4"/>
+      </svg>
+    </div>
+    <h1>あなたの数秘</h1>
+    <p>あなたの数字がもつ才能を見てみよう！</p>
+  </div>
+
+  <!-- Main card -->
+  <div class="card">
+    <div class="tabs">
+      <button class="tab-btn" id="tab-direct" onclick="switchMode('direct')" style="background:#00C8C8;color:white;box-shadow:0 3px 0 #009A9A;">数字で入力 🔢</button>
+      <button class="tab-btn" id="tab-birth" onclick="switchMode('birth')" style="background:transparent;color:#9ECECE;">生年月日から 🎂</button>
+    </div>
+
+    <div id="panel-direct">
+      <label>数秘ナンバーを入れてね（1〜9 / 11 / 22 / 33）</label>
+      <input type="number" id="num-input" placeholder="例：7">
+    </div>
+
+    <div id="panel-birth" style="display:none;">
+      <label>生年月日を入れてね 🎂</label>
+      <input type="date" id="birth-input">
+      <div id="lp-display"></div>
+    </div>
+
+    <div id="error-box"></div>
+
+    <button class="btn-main btn-reveal" onclick="reveal()">みてみる！ 🔮</button>
+  </div>
+
+  <!-- Loading -->
+  <div id="loading">
+    <svg width="56" height="56" viewBox="0 0 72 72" fill="none">
+      <circle cx="36" cy="36" r="36" fill="#00C8C8"/>
+      <text x="36" y="41" text-anchor="middle" font-family="'Nunito',sans-serif" font-weight="900" font-size="15" fill="white">number</text>
+    </svg>
+    <p>よみこみ中…</p>
+  </div>
+
+  <!-- Result -->
+  <div id="result"></div>
+
+</div>
+
+<script>
+const DATA = {
+  1:{title:"開拓者",sub:"The Pioneer",keys:["リーダーシップ","独立心","創造性","勇気","意志の強さ"],talent:"あなたは生まれながらのリーダー！誰も踏み込んだことのない道を切り開く力を持ち、独自のビジョンで人々を導きます。アイデアを形にする創造力と、困難に立ち向かう強靭な意志が最大の武器です✨",shadow:"孤独になりがち、頑固すぎることも。他者の意見に耳を傾けることで、さらに輝けるよ！",emoji:"☀️",color:"#00C8C8",bg:"#E0FAFA"},
+  2:{title:"調和者",sub:"The Diplomat",keys:["協調性","直感力","優しさ","忍耐","繊細さ"],talent:"あなたは人と人をつなぐ天才！場の空気を読み、対立を和らげ、誰もが心地よくいられる環境を作り出します。鋭い直感と深い共感力で、言葉にならない相手の気持ちを察することができるよ💕",shadow:"自己犠牲しすぎることも。自分自身の気持ちも大切にすることが成長への鍵だよ！",emoji:"🌙",color:"#A78BFA",bg:"#F0EBFF"},
+  3:{title:"表現者",sub:"The Creator",keys:["表現力","創造性","社交性","楽観性","ユーモア"],talent:"あなたは言葉・芸術・音楽など、あらゆる表現を通じて世界に喜びをもたらす存在！明るいエネルギーで周囲を引きつけ、独自の感性でインスピレーションを与えます🌈",shadow:"感情の波が激しくなることも。エネルギーを一つに集中させると本領を発揮できるよ！",emoji:"🎨",color:"#F472B6",bg:"#FFF0F7"},
+  4:{title:"建設者",sub:"The Builder",keys:["堅実さ","誠実さ","努力","組織力","信頼性"],talent:"あなたは揺るぎない基盤を作る力を持ってるよ！コツコツと積み上げる忍耐力と、物事を体系立てる才能が際立ちます。周囲から最も頼られる、信頼の柱的存在🏔️",shadow:"変化を恐れることも。柔軟性を取り入れることで可能性がさらに広がるよ！",emoji:"🌿",color:"#34D399",bg:"#EDFAF5"},
+  5:{title:"自由人",sub:"The Explorer",keys:["自由","冒険心","適応力","多才さ","変化への愛"],talent:"あなたは変化と自由の中で最も輝く魂！好奇心旺盛で多才、どんな環境にも素早く適応できます。新しい経験を通じて、人々に刺激と新鮮な視点をもたらす存在🌊",shadow:"飽きやすく、継続が難しいことも。根を張る練習が人生を豊かにするよ！",emoji:"🌊",color:"#FB923C",bg:"#FFF5EE"},
+  6:{title:"養育者",sub:"The Nurturer",keys:["愛情","責任感","献身","美への感性","家族愛"],talent:"あなたは愛と美と調和を体現する存在！人を癒し、育て、守る力が天性に備わっています。深い愛情で周囲の環境を美しく整える才能を持つよ💗",shadow:"完璧主義で心配性になることも。「完璧でなくていい」と自分を許すことが解放への鍵！",emoji:"💗",color:"#F87171",bg:"#FFF0F0"},
+  7:{title:"探求者",sub:"The Seeker",keys:["知性","直感","神秘性","分析力","内省"],talent:"あなたは真実と知恵を追い求める魂！表面には見えないものを見抜く鋭い洞察力と、深い分析力が最大の才能。哲学・科学・スピリチュアルな領域で本領を発揮するよ🔮",shadow:"孤立しやすく、人を信じるのが難しいことも。心を開く勇気が最大の宝を引き寄せる！",emoji:"🔮",color:"#60A5FA",bg:"#EEF5FF"},
+  8:{title:"達成者",sub:"The Achiever",keys:["力強さ","実行力","財運","カリスマ","向上心"],talent:"あなたはビジネスと物質世界で類まれなる力を発揮！大きな目標に向かって戦略的に動き、豊かさを生み出す才能が天性に宿っています。強いカリスマで人々を動かすよ♾️",shadow:"支配的になることも。力を「与えるため」に使うと、人生が最高の流れに乗るよ！",emoji:"♾️",color:"#A78BFA",bg:"#F3EEFF"},
+  9:{title:"完成者",sub:"The Humanitarian",keys:["慈悲","寛大さ","知恵","芸術性","普遍的な愛"],talent:"あなたは人類への深い愛と、すべてを包み込む寛大さを持つ魂！芸術・教育・ヒーリングなど、世界をより良くする使命を持ちます🌍",shadow:"感情的になりすぎることも。自分自身も愛する対象に含めることが本当の完成への道！",emoji:"🌍",color:"#2DD4BF",bg:"#EAFAF8"},
+  11:{title:"啓示者",sub:"The Illuminator",keys:["霊感","インスピレーション","理想主義","直感の天才","光の使者"],talent:"マスターナンバーの持ち主！高次元からのインスピレーションを受け取り、世界に伝える役割を担っています。芸術・スピリチュアル・社会変革で時代を超えた影響を与えるよ⚡",shadow:"感受性が強すぎて疲弊することも。地に足をつけるルーティンが才能を安定させるよ！",emoji:"⚡",color:"#C084FC",bg:"#F8F0FF",master:true},
+  22:{title:"マスタービルダー",sub:"The Master Builder",keys:["壮大なビジョン","実現力","リーダーシップ","奉仕","遺産"],talent:"夢を現実にする最高の力を持つマスターナンバー！壮大なアイデアを実際の形に落とし込み、何百万人もの人生に影響を与える仕事を成し遂げることができるよ🏛️",shadow:"プレッシャーに押しつぶされることも。完璧を目指しすぎず、一歩一歩を大切に！",emoji:"🏛️",color:"#F59E0B",bg:"#FFFBEE",master:true},
+  33:{title:"マスターティーチャー",sub:"The Master Teacher",keys:["無条件の愛","癒し","教師","自己犠牲の美徳","光の体現"],talent:"最も稀なマスターナンバー✨ 無条件の愛と慈悲で人々を癒し、導く使命を持ちます。あなたの存在そのものが周囲の人々にとっての祝福です🕊️",shadow:"自分を後回しにしすぎることも。まず自分を満たすことが世界への最大の貢献だよ！",emoji:"🕊️",color:"#F9A8D4",bg:"#FFF5FA",master:true}
+};
+
+let currentMode = 'direct';
+
+function switchMode(m) {
+  currentMode = m;
+  document.getElementById('panel-direct').style.display = m === 'direct' ? 'block' : 'none';
+  document.getElementById('panel-birth').style.display = m === 'birth' ? 'block' : 'none';
+  const td = document.getElementById('tab-direct');
+  const tb = document.getElementById('tab-birth');
+  if (m === 'direct') {
+    td.style.background = '#00C8C8'; td.style.color = 'white'; td.style.boxShadow = '0 3px 0 #009A9A';
+    tb.style.background = 'transparent'; tb.style.color = '#9ECECE'; tb.style.boxShadow = 'none';
+  } else {
+    tb.style.background = '#00C8C8'; tb.style.color = 'white'; tb.style.boxShadow = '0 3px 0 #009A9A';
+    td.style.background = 'transparent'; td.style.color = '#9ECECE'; td.style.boxShadow = 'none';
+  }
+  clearResult();
+}
+
+document.getElementById('birth-input').addEventListener('change', function() {
+  const lp = calcLP(this.value);
+  const d = document.getElementById('lp-display');
+  if (lp) {
+    d.style.display = 'block';
+    d.innerHTML = 'ライフパスナンバー：<span style="font-size:22px;">' + lp + '</span> ✨';
+  } else {
+    d.style.display = 'none';
+  }
+});
+
+function calcLP(dateStr) {
+  const digits = dateStr.replace(/\D/g, '');
+  if (!digits) return null;
+  let s = digits.split('').reduce((a, d) => a + parseInt(d), 0);
+  while (s > 9 && s !== 11 && s !== 22 && s !== 33) {
+    s = s.toString().split('').reduce((a, d) => a + parseInt(d), 0);
+  }
+  return s;
+}
+
+function clearResult() {
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+}
+
+function showError(msg) {
+  const e = document.getElementById('error-box');
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+
+function reveal() {
+  clearResult();
+  document.getElementById('loading').style.display = 'none';
+  let num;
+  if (currentMode === 'direct') {
+    num = parseInt(document.getElementById('num-input').value);
+    if (![1,2,3,4,5,6,7,8,9,11,22,33].includes(num)) {
+      showError('1〜9、または11・22・33を入力してね！');
+      return;
+    }
+  } else {
+    const bd = document.getElementById('birth-input').value;
+    if (!bd) { showError('生年月日を入力してね！'); return; }
+    num = calcLP(bd);
+    if (!num || !DATA[num]) { showError('計算できませんでした'); return; }
+  }
+  document.getElementById('loading').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('loading').style.display = 'none';
+    renderResult(DATA[num]);
+  }, 700);
+}
+
+function renderResult(d) {
+  const pills = d.keys.map(k =>
+    `<span class="pill" style="padding:6px 12px;border-radius:30px;font-size:12px;font-weight:800;background:white;color:${d.color};border:2px solid ${d.color}55;box-shadow:0 2px 0 ${d.color}33;">${k}</span>`
+  ).join('');
+
+  document.getElementById('result').innerHTML = `
+    <div style="animation:bounceIn 0.6s ease;">
+      <div class="result-hero" style="background:${d.bg};border:3px solid ${d.color}44;">
+        <div class="deco1" style="background:${d.color}16;"></div>
+        <div class="deco2" style="background:${d.color}11;"></div>
+        ${d.master ? `<div class="master-badge" style="background:${d.color};">✦ MASTER NUMBER ✦</div><br>` : ''}
+        <div class="result-emoji">${d.emoji}</div>
+        <h2 class="result-title" style="color:${d.color};">${d.title}</h2>
+        <p class="result-sub" style="color:${d.color}99;">${d.sub}</p>
+        <div class="keywords">${pills}</div>
+      </div>
+
+      <div class="info-card" style="border:2px solid ${d.color}33;animation:floatUp 0.6s ease 0.1s both;">
+        <div class="info-card-header">
+          <div class="info-icon" style="background:${d.color};">✨</div>
+          <span class="info-label" style="color:${d.color};">才能と特徴</span>
+        </div>
+        <p class="info-text" style="font-size:14px;">${d.talent}</p>
+      </div>
+
+      <div class="info-card" style="border:2px solid #F9A8C833;animation:floatUp 0.6s ease 0.2s both;">
+        <div class="info-card-header">
+          <div class="info-icon" style="background:#F9A8C8;">🌱</div>
+          <span class="info-label" style="color:#E0609A;">成長のヒント</span>
+        </div>
+        <p class="info-text" style="font-size:13px;color:#888;">${d.shadow}</p>
+      </div>
+
+      <div class="footer-bar" style="animation:floatUp 0.6s ease 0.3s both;">
+        <svg width="18" height="18" viewBox="0 0 72 72" fill="none">
+          <circle cx="36" cy="36" r="36" fill="#00C8C8"/>
+          <text x="36" y="43" text-anchor="middle" font-family="'Nunito',sans-serif" font-weight="900" font-size="18" fill="white">n</text>
+        </svg>
+        <span>by number</span>
+      </div>
+    </div>
+  `;
+  document.getElementById('result').style.display = 'block';
+}
+</script>
+</body>
+</html>
