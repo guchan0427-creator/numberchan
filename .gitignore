@@ -1,0 +1,6 @@
+.claude/
+*.csv
+app.js
+style.css
+node_modules/
+.vercel/
