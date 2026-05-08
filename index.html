@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数秘 by ナンバーちゃん</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+JP:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FDF6F0;
+    --pink: #E8A4C9;
+    --pink-light: #F5D6EA;
+    --pink-dark: #C47DAA;
+    --blue: #B5CDE8;
+    --peach: #F2D0A4;
+    --gold: #C9956A;
+    --gold-light: #E8C9A0;
+    --mint: #A8D8C8;
+    --text: #3D2B1F;
+    --text-mid: #7A5C4A;
+    --text-light: #A88070;
+    --white: #FFFEF9;
+    --line-col: #E8D5C4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; background: rgba(253,246,240,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line-col); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; letter-spacing: 0.15em; color: var(--pink-dark); }
+  .nav-logo span { font-style: italic; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 11px; letter-spacing: 0.12em; color: var(--text-mid); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--pink-dark); }
+  #home { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 24px 60px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 60% 50% at 20% 30%, rgba(232,164,201,0.18) 0%, transparent 60%), radial-gradient(ellipse 50% 60% at 80% 70%, rgba(181,205,232,0.15) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 60% 20%, rgba(242,208,164,0.12) 0%, transparent 60%); }
+  .orb { position: absolute; border-radius: 50%; animation: float 8s ease-in-out infinite; pointer-events: none; }
+  .orb-1 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(232,164,201,0.12), transparent); top: 5%; left: -5%; animation-delay: 0s; }
+  .orb-2 { width: 200px; height: 200px; background: radial-gradient(circle, rgba(181,205,232,0.15), transparent); top: 60%; right: 0%; animation-delay: -3s; }
+  .orb-3 { width: 150px; height: 150px; background: radial-gradient(circle, rgba(242,208,164,0.18), transparent); bottom: 10%; left: 20%; animation-delay: -5s; }
+  @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 680px; }
+  .hero-eyebrow { font-family: 'Cormorant Garamond', serif; font-size: 13px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 20px; display: block; animation: fadeUp 0.8s ease both; }
+  .hero-title { font-family: 'Noto Serif JP', serif; font-size: clamp(36px, 8vw, 64px); font-weight: 300; line-height: 1.3; color: var(--text); margin-bottom: 12px; animation: fadeUp 0.8s ease 0.1s both; }
+  .hero-title em { font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 1.15em; color: var(--pink-dark); }
+  .hero-sub { font-size: 13px; color: var(--text-light); line-height: 1.9; margin-bottom: 48px; animation: fadeUp 0.8s ease 0.2s both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .calc-card { background: var(--white); border: 1px solid var(--line-col); border-radius: 24px; padding: 40px 48px; max-width: 480px; width: 100%; margin: 0 auto; box-shadow: 0 8px 48px rgba(100,60,40,0.06); animation: fadeUp 0.8s ease 0.3s both; }
+  .calc-title { font-family: 'Noto Serif JP', serif; font-size: 16px; font-weight: 400; text-align: center; margin-bottom: 8px; color: var(--text); }
+  .calc-desc { font-size: 11px; color: var(--text-light); text-align: center; margin-bottom: 28px; letter-spacing: 0.05em; }
+  .date-inputs { display: flex; gap: 12px; margin-bottom: 20px; justify-content: center; }
+  .date-inputs select { flex: 1; padding: 12px 8px; border: 1px solid var(--line-col); border-radius: 12px; font-family: 'Noto Sans JP', sans-serif; font-size: 13px; background: var(--bg); color: var(--text); appearance: none; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+  .date-inputs select:focus { outline: none; border-color: var(--pink); }
+  .calc-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%); color: white; border: none; border-radius: 50px; font-family: 'Noto Serif JP', serif; font-size: 14px; letter-spacing: 0.08em; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 20px rgba(196,125,170,0.3); }
+  .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(196,125,170,0.4); }
+  .result-area { margin-top: 24px; display: none; text-align: center; }
+  .result-area.show { display: block; animation: fadeUp 0.5s ease both; }
+  .result-number { font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; line-height: 1; background: linear-gradient(135deg, var(--pink-dark), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
+  .result-label { font-size: 11px; letter-spacing: 0.15em; color: var(--text-light); margin-bottom: 12px; }
+  .result-keyword { font-family: 'Noto Serif JP', serif; font-size: 15px; color: var(--text); margin-bottom: 16px; }
+  .result-goto { display: inline-block; padding: 10px 28px; border: 1px solid var(--pink); border-radius: 50px; font-size: 12px; color: var(--pink-dark); text-decoration: none; transition: all 0.2s; cursor: pointer; background: transparent; font-family: 'Noto Sans JP', sans-serif; }
+  .result-goto:hover { background: var(--pink); color: white; }
+  #numbers { padding: 80px 24px; }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-eyebrow { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 0.3em; color: var(--gold); display: block; margin-bottom: 12px; }
+  .section-title { font-family: 'Noto Serif JP', serif; font-size: clamp(24px, 5vw, 36px); font-weight: 300; color: var(--text); }
+  .numbers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; max-width: 900px; margin: 0 auto; }
+  .num-card { background: var(--white); border: 1px solid var(--line-col); border-radius: 20px; padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+  .num-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(100,60,40,0.1); }
+  .num-card-number { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; line-height: 1; margin-bottom: 8px; }
+  .num-card-keyword { font-size: 10px; color: var(--text-mid); letter-spacing: 0.05em; }
+  #number-page { display: none; }
+  #number-page.show { display: block; }
+  .num-hero { padding: 120px 24px 60px; text-align: center; position: relative; overflow: hidden; }
+  .num-hero-bg { position: absolute; inset: 0; opacity: 0.4; }
+  .num-hero-content { position: relative; z-index: 1; }
+  .num-badge { display: inline-block; width: 80px; height: 80px; border-radius: 50%; line-height: 80px; font-family: 'Cormorant Garamond', serif; font-size: 36px; color: white; margin-bottom: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+  .num-title { font-family: 'Noto Serif JP', serif; font-size: clamp(28px, 6vw, 48px); font-weight: 300; margin-bottom: 8px; }
+  .num-subtitle { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--text-mid); font-style: italic; margin-bottom: 20px; }
+  .num-essence { max-width: 560px; margin: 0 auto 16px; font-size: 13px; line-height: 2; color: var(--text-mid); }
+  .traits { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 600px; margin: 0 auto 48px; }
+  .trait-tag { padding: 6px 16px; border-radius: 50px; font-size: 11px; letter-spacing: 0.06em; background: white; }
+  .topics { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; }
+  .topic-section { margin-bottom: 56px; }
+  .topic-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid var(--line-col); }
+  .topic-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; opacity: 0.85; }
+  .topic-title { font-family: 'Noto Serif JP', serif; font-size: 18px; font-weight: 400; color: var(--text); }
+  .topic-sub { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+  .worry-card { background: var(--white); border: 1px solid var(--line-col); border-radius: 20px; padding: 28px 32px; margin-bottom: 16px; }
+  .worry-label { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.1em; color: var(--text-light); margin-bottom: 10px; }
+  .worry-text { font-family: 'Noto Serif JP', serif; font-size: 16px; font-weight: 400; color: var(--text); margin-bottom: 20px; line-height: 1.7; }
+  .divider { height: 1px; margin-bottom: 20px; opacity: 0.4; }
+  .advice-label { font-size: 11px; letter-spacing: 0.1em; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .advice-label::after { content: ''; flex: 1; height: 1px; background: var(--line-col); }
+  .advice-text { font-size: 13px; line-height: 2; color: var(--text-mid); }
+  .advice-text strong { color: var(--text); font-weight: 500; }
+  .chan-quote { background: linear-gradient(135deg, rgba(232,164,201,0.08), rgba(242,208,164,0.08)); border: 1px solid var(--pink-light); border-left: 3px solid var(--pink); border-radius: 0 16px 16px 0; padding: 20px 24px; margin-top: 16px; }
+  .chan-quote-name { font-size: 10px; letter-spacing: 0.15em; color: var(--pink-dark); margin-bottom: 8px; }
+  .chan-quote-text { font-family: 'Noto Serif JP', serif; font-size: 13px; line-height: 2; color: var(--text); }
+  footer { background: var(--text); color: rgba(255,255,255,0.5); padding: 32px 24px; text-align: center; font-size: 11px; letter-spacing: 0.1em; }
+  footer span { color: var(--pink-light); }
+  .back-btn { position: fixed; top: 80px; left: 24px; background: var(--white); border: 1px solid var(--line-col); border-radius: 50px; padding: 8px 18px; font-size: 11px; color: var(--text-mid); cursor: pointer; z-index: 50; transition: all 0.2s; display: none; }
+  .back-btn.show { display: block; }
+  .back-btn:hover { background: var(--pink-light); border-color: var(--pink); color: var(--pink-dark); }
+  .ngok-section { max-width: 800px; margin: 0 auto 64px; padding: 0 24px; }
+  .ngok-header { text-align: center; margin-bottom: 32px; }
+  .ngok-header-eyebrow { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 0.3em; color: var(--gold); display: block; margin-bottom: 10px; }
+  .ngok-header-title { font-family: 'Noto Serif JP', serif; font-size: 22px; font-weight: 300; }
+  .ngok-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 640px) { .ngok-grid { grid-template-columns: 1fr; } }
+  .ngok-col { background: var(--white); border-radius: 20px; overflow: hidden; border: 1px solid var(--line-col); }
+  .ngok-col-header { padding: 16px 24px; display: flex; align-items: center; gap: 10px; }
+  .ngok-col-header.ng { background: #FDE8E8; }
+  .ngok-col-header.ok { background: #E4F4EC; }
+  .ngok-badge { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .ngok-badge.ng { background: #E07070; color: white; }
+  .ngok-badge.ok { background: #5AAE7A; color: white; }
+  .ngok-col-title { font-family: 'Noto Serif JP', serif; font-size: 14px; }
+  .ngok-col-title.ng { color: #C05050; }
+  .ngok-col-title.ok { color: #3A8A5A; }
+  .ngok-list { padding: 8px 0; }
+  .ngok-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 20px; border-bottom: 1px solid var(--line-col); font-size: 12px; line-height: 1.7; color: var(--text-mid); }
+  .ngok-item:last-child { border-bottom: none; }
+  .ngok-num { font-family: 'Cormorant Garamond', serif; font-size: 15px; flex-shrink: 0; margin-top: 1px; color: var(--text-light); }
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+  @media (max-width: 600px) { nav { padding: 12px 16px; } .nav-links { display: none; } .calc-card { padding: 28px 20px; } .date-inputs { flex-direction: column; } .worry-card { padding: 20px; } .topics { padding: 0 16px 60px; } }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">Number<span>chan</span></div>
+  <div class="nav-links">
+    <a href="#" onclick="showHome()">TOP</a>
+    <a href="#numbers">数字一覧</a>
+  </div>
+</nav>
+<button class="back-btn" id="backBtn" onclick="showHome()">← 戻る</button>
+<div id="home-page">
+  <section id="home">
+    <div class="hero-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="hero-content">
+      <span class="hero-eyebrow">✦ &nbsp; N U M E R O L O G Y &nbsp; ✦</span>
+      <h1 class="hero-title">数字は<br>あなたを<br><em>知っている</em></h1>
+      <p class="hero-sub">生まれた日に刻まれた数字が、あなたの本質・悩みの理由・<br>これからの生き方をそっと教えてくれるの。ふふふ♡</p>
+      <div class="calc-card">
+        <h2 class="calc-title">あなたのライフパス数を調べる</h2>
+        <p class="calc-desc">生年月日を選んでね</p>
+        <div class="date-inputs">
+          <select id="year"><option value="">年</option></select>
+          <select id="month"><option value="">月</option></select>
+          <select id="day"><option value="">日</option></select>
+        </div>
+        <button class="calc-btn" onclick="calculate()">✦ 数字を調べる</button>
+        <div class="result-area" id="result">
+          <div class="result-number" id="resultNum"></div>
+          <div class="result-label">YOUR LIFE PATH NUMBER</div>
+          <div class="result-keyword" id="resultKeyword"></div>
+          <button class="result-goto" onclick="goToNumber(currentNum)">このページを読む →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="numbers">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">ALL NUMBERS</span>
+      <h2 class="section-title">あなたの数字はどれ？</h2>
+    </div>
+    <div class="numbers-grid" id="numGrid"></div>
+  </section>
+  <footer><p>© 2025 <span>Number Chan Numerology</span> by ナンバーちゃん</p></footer>
+</div>
+<div id="number-page">
+  <div class="num-hero">
+    <div class="num-hero-bg" id="numHeroBg"></div>
+    <div class="num-hero-content">
+      <div class="num-badge" id="numBadge"></div>
+      <h1 class="num-title" id="numTitle"></h1>
+      <p class="num-subtitle" id="numSubtitle"></p>
+      <p class="num-essence" id="numEssence"></p>
+      <div class="traits" id="numTraits"></div>
+    </div>
+  </div>
+  <div class="topics" id="numTopics"></div>
+  <div class="ngok-section" id="numNgok"></div>
+  <footer><p>© 2025 <span>Number Chan Numerology</span> by ナンバーちゃん</p></footer>
+</div>
+
+<script>
+// セレクト初期化
+(function(){
+  var yEl = document.getElementById('year');
+  for(var y=1950;y<=2030;y++){ var o=document.createElement('option'); o.value=y; o.textContent=y; yEl.appendChild(o); }
+  var mEl = document.getElementById('month');
+  for(var m=1;m<=12;m++){ var o=document.createElement('option'); o.value=m; o.textContent=m; mEl.appendChild(o); }
+  var dEl = document.getElementById('day');
+  for(var d=1;d<=31;d++){ var o=document.createElement('option'); o.value=d; o.textContent=d; dEl.appendChild(o); }
+})();
+
+const NUMBER_COLORS = {1:'#F4A7A7',2:'#F0B8CF',3:'#F5D87A',4:'#9DC89D',5:'#9DC4E4',6:'#C8A4E4',7:'#7EC4D4',8:'#E8B870',9:'#C0A0D4',11:'#96C4F0',22:'#A8D890',33:'#F0B0C8'};
+const NUMBERS = {
+  1:{keyword:'リーダー・パイオニア',subtitle:'Leader & Pioneer',essence:'自分の道を切り拓く、最初の一歩を踏み出す勇気を持つ魂。あなたは誰よりも先へ進む力を持って生まれてきたの。',traits:['行動力','独立心','創造性','情熱','意志の強さ']},
+  2:{keyword:'調和・感受性',subtitle:'Harmony & Sensitivity',essence:'人と人を繋げ、愛と調和で世界を包む繊細な魂。あなたの共感力は、誰かの心をそっと救う力になるの。',traits:['共感力','思いやり','協調性','直感','サポート力']},
+  3:{keyword:'表現・創造・喜び',subtitle:'Expression & Joy',essence:'言葉・アート・笑いで世界に喜びを広げるクリエイティブな魂。あなたの表現が、誰かの世界を明るく照らすんだよ。',traits:['表現力','楽観性','コミュ力','ユーモア','創造性']},
+  4:{keyword:'安定・努力・基盤',subtitle:'Stability & Foundation',essence:'地道な積み重ねで揺るぎない基盤を作る、信頼と誠実さの魂。コツコツ続けるあなたの強さは、本物なんだよ。',traits:['誠実さ','計画力','継続力','責任感','忍耐力']},
+  5:{keyword:'自由・変化・冒険',subtitle:'Freedom & Adventure',essence:'変化を恐れず、自由に羽ばたきながら世界を体験する好奇心の魂。あなたの冒険心が、新しい可能性を開いていくの。',traits:['適応力','好奇心','自由な発想','行動力','多才さ']},
+  6:{keyword:'愛・責任・家族',subtitle:'Love & Responsibility',essence:'愛と美しさで周りを包み、大切な人を守る愛の守護者の魂。あなたの愛情は、周りをあたたかく包んでいるの。',traits:['愛情深さ','世話好き','美的センス','責任感','調和力']},
+  7:{keyword:'探求・知性・神秘',subtitle:'Wisdom & Mystery',essence:'深く考え、真実を追い求める哲学者の魂。あなたの深い洞察力は、誰も見えないものを見つける力があるの。',traits:['分析力','直感力','知的好奇心','独自の視点','精神的深さ']},
+  8:{keyword:'力・豊かさ・達成',subtitle:'Power & Abundance',essence:'目標に向かって力強く進み、豊かさを現実に引き寄せるパワーの魂。あなたの力は、世界を動かす可能性があるんだよ。',traits:['実行力','達成力','リーダーシップ','現実性','パワー']},
+  9:{keyword:'完成・奉仕・慈愛',subtitle:'Completion & Compassion',essence:'すべてを経験し、世界に愛を返す大きな愛と智慧を持つ完結の魂。あなたの包容力は、誰よりも深くてあたたかいの。',traits:['包容力','慈悲深さ','芸術的センス','精神的成熟','高い理想']},
+  11:{keyword:'直感・ビジョン・光',subtitle:'Intuition & Vision',essence:'高い直感とビジョンで時代の光となる、スピリチュアルなマスターナンバーの魂。あなたの感性は、特別な光を持っているの。',traits:['強い直感力','インスピレーション','豊かな感受性','霊的繋がり','ビジョン']},
+  22:{keyword:'現実化・建設・大きな夢',subtitle:'Master Builder',essence:'大きなビジョンを現実に落とし込む、マスタービルダーの魂。あなたには夢を形にする、特別な力があるんだよ。',traits:['実現力','大きな視野','組織力','カリスマ性','形にする力']},
+  33:{keyword:'慈悲・教え・愛の師',subtitle:'Master Teacher',essence:'無条件の愛で人々を導く、最高の慈悲を持つマスターナンバーの魂。あなたの愛は、この世界に光をもたらすの。',traits:['無条件の愛','癒しの力','教える力','高い共感力','精神的成熟']}
+};
+const TOPICS = [
+  {key:'relationship',icon:'🌿',title:'人間関係',sub:'合わない人・職場・家族との悩み'},
+  {key:'love',icon:'🌸',title:'恋愛・パートナーシップ',sub:'愛され方・すれ違い・相性の悩み'},
+  {key:'work',icon:'✨',title:'仕事・お金',sub:'向いてる仕事・やりがい・お金の悩み'},
+  {key:'selfesteem',icon:'🌙',title:'自己肯定感',sub:'自分責め・自信・比較してしまう悩み'},
+  {key:'motivation',icon:'🔥',title:'やる気・継続',sub:'三日坊主・モチベーション・頑張れない悩み'},
+  {key:'direction',icon:'🌟',title:'人生の方向性',sub:'決断・将来への不安・このままでいいのかの悩み'}
+];
+
+const TD = {
+  1:{
+    relationship:{worry:'一人でなんでもやろうとしてしまって、人に頼れない。チームで動く時にイライラしてしまうことも…',advice:'あなたは<strong>「自分でやった方が早い」</strong>と感じやすいの。でもそれは「できる力がある」証拠でもあるんだよ。\n\n人に任せることが苦手なのは、あなたの基準が高いから。まず「完璧じゃなくてもいい」を許可してあげて。そして<strong>小さなことから一つだけ誰かに頼る練習</strong>をしてみてね。',quote:'「頼れない」じゃなくて「頼り方をまだ知らない」だけかも。あなたが一歩引いた分、誰かが輝けるんだよ。'},
+    love:{worry:'好きな人や恋人に「なんで私の気持ちわかってくれないの」ってなってしまう。自分のペースを乱されたくない気持ちもある。',advice:'1番は<strong>「自分の感覚・ペース・判断」</strong>をとても大切にするの。だから恋愛でも「この人は私のビジョンを理解してくれる？」が無意識のチェックポイントになってることが多いよ。\n\n<strong>「一人でいること」と「ともに進むこと」のバランス</strong>を意識してみてね。',quote:'あなたのペースに合わせてくれる人を選んでいいの。無理して合わせなくていいんだよ。ふふふ♡'},
+    work:{worry:'人に指示されるのが苦手。自分のやり方でやりたいけど、組織の中でうまくやるのが難しい。',advice:'1番のあなたは<strong>「自分で決めて動く環境」</strong>で最大限に輝けるの。向いてるのは<strong>フリーランス・起業・新規事業立ち上げ・リーダーポジション</strong>。組織にいる場合は、主体的に動ける役割を積極的に取りにいってね。',quote:'あなたが「これをやる」と決めた仕事が、一番輝く仕事なんだよ。'},
+    selfesteem:{worry:'「自分なんて」と思う時がある。やりたいことはあるのに、一歩踏み出せない自分が嫌になる。',advice:'1番の自己肯定感は<strong>「やってみた経験」</strong>から積み上がるタイプなの。まず動いてみて、うまくいかなくても「チャレンジした自分」を認める。それを繰り返すうちに<strong>「自分はやれる」という感覚が育って</strong>いくよ。',quote:'「まだできてない」じゃなくて「これからやる」。あなたには、それを現実にする力があるんだよ。'},
+    motivation:{worry:'最初はやる気があるのに、途中でダレてしまう。新しいことを始めてもすぐに飽きてしまうことが多い。',advice:'1番のやる気スイッチは<strong>「新しさ」と「自分が先頭に立てる感覚」</strong>にあるの。「飽きた」は「次のステージに進む合図」。やめることより<strong>バージョンアップすること</strong>を意識してみてね。',quote:'飽きることは悪いことじゃないの。それはあなたが「次へ」と成長している証拠なんだよ。'},
+    direction:{worry:'これでいいのか、自分の人生の方向性がわからない。やりたいことはあるのに、踏み出せない。',advice:'1番のあなたに必要なのは<strong>「完璧な計画」より「最初の一歩」</strong>なの。あなたは動き始めると道が見えてくるタイプ。<strong>「もし失敗してもいい」を前提にして、今月一つだけ試してみて。</strong>',quote:'あなたの人生の答えは、考えた先にあるんじゃなくて、動いた先にあるんだよ。ふふふ♡'}
+  },
+  2:{
+    relationship:{worry:'誰かと一緒にいると相手に合わせすぎてしまって、後で「なんで私ばかり…」と疲れてしまう。',advice:'2番のあなたは<strong>空気を読む力と共感力がとても高い</strong>の。「相手に合わせること」と「自分を消すこと」は違うよ。<strong>「私はこう思う」をやんわりでも伝える練習</strong>を少しずつ始めてみてね。',quote:'相手を大切にするのと同じくらい、自分の気持ちも大切にしていいんだよ。'},
+    love:{worry:'好きな人に尽くしすぎてしまって、気づいたら自分だけが頑張っている関係になってしまう。',advice:'2番は<strong>愛することが得意な分、愛されることが苦手</strong>なことが多いの。まず<strong>「好意を素直に受け取る練習」</strong>から始めてみてね。相手の「ありがとう」を笑顔で受け取るだけでいいの。',quote:'尽くすことも愛だけど、受け取ることも同じくらい大切な愛の形なんだよ。ふふふ♡'},
+    work:{worry:'人のサポートは得意だけど、自分がやりたいことがわからない。縁の下の力持ちで終わってしまう気がする。',advice:'2番のあなたは<strong>「人のために」動く時に本領を発揮する</strong>の。ただ<strong>「縁の下」でも、あなたの貢献をちゃんと認めてくれる環境を選ぶ</strong>ことが大切なんだよ。',quote:'あなたがいるだけでチームが温かくなるの。それって、すごく特別な力なんだよ。'},
+    selfesteem:{worry:'自分に自信がない。誰かに承認されないと「自分はダメだ」と思ってしまう。',advice:'2番の自己肯定感は<strong>「誰かに認められること」に頼りやすい</strong>の。<strong>「今日、自分がよかったと思えること」を毎日ひとつ見つける</strong>練習をしてみてね。',quote:'あなたの価値は、誰かに認められるかどうかで決まるものじゃないんだよ。'},
+    motivation:{worry:'一人だとやる気が出ない。誰かのためなら頑張れるけど、自分のためだと続かない。',advice:'2番のやる気スイッチは<strong>「誰かのため」や「一緒に頑張れる仲間」</strong>にあるの。<strong>勉強仲間・作業仲間を作ったり、「あの人に喜んでもらいたい」という動機で動く</strong>のは最高のモチベーション法なの。',quote:'誰かのために頑張れるあなたの力は、本物の強さなんだよ。'},
+    direction:{worry:'自分が何をしたいのかわからない。いつも人の意見に流されて、自分の人生を生きていない気がする。',advice:'2番のあなたが方向性を見つけるには、<strong>「自分が何を感じているか」に敏感になること</strong>が大切なの。<strong>「これ楽しいな」「これ心地いいな」という感覚をメモしておく</strong>だけでいい。',quote:'あなたの「感じる力」は、人生の羅針盤になるんだよ。ふふふ♡'}
+  },
+  3:{
+    relationship:{worry:'明るくていい人キャラを演じすぎて、本当に傷ついた時に言えない。誰も私の本音を知らない気がする。',advice:'3番のあなたは<strong>場を明るくする力が高い分、「つらい」「悲しい」を言いにくい</strong>と感じやすいの。信頼できる一人に<strong>「実はね…」と話してみること</strong>から始めてみて。',quote:'明るいあなたも、悩むあなたも、同じくらい愛される価値があるんだよ。'},
+    love:{worry:'好きな人の前でテンションを上げすぎてしまって、素の自分を見せるのが怖い。',advice:'3番は<strong>「楽しい自分」でいることがデフォルト</strong>になりやすいの。でも本当に深い関係は、素の自分を見せた時に始まるんだよ。<strong>「実は少し疲れてる」という自分も出してみて</strong>。',quote:'楽しいだけじゃなく、素のあなたを好きになってくれる人が、本物なんだよ。ふふふ♡'},
+    work:{worry:'飽きっぽくてひとつの仕事が続かない。才能はあると言われるけど、活かせている気がしない。',advice:'3番の才能は<strong>「表現・発信・コミュニケーション」</strong>にあるの。一つのことに縛られず、<strong>複数の表現の場を持つこと</strong>があなたのスタイルに合ってるんだよ。',quote:'あなたの「表現したい」という衝動は、才能が溢れ出しているサインなんだよ。'},
+    selfesteem:{worry:'SNSの反応が気になりすぎる。いいねが少ないと「自分はダメだ」と落ち込んでしまう。',advice:'3番は<strong>表現することで生きる魂</strong>なの。<strong>「誰かに見てもらうため」より「自分が表現したいから」</strong>を動機の中心に戻してみて。',quote:'あなたが表現することで、世界は少し明るくなるの。それは数字が保証してくれてるんだよ。'},
+    motivation:{worry:'楽しいと思えることしか続かない。義務感でやることが本当に苦手で、自己嫌悪になる。',advice:'3番にとって<strong>「楽しい」はやる気の燃料</strong>なの。これはわがままじゃなくて、あなたの本質的な仕組みなんだよ。<strong>「これのどこが楽しいか」を意識的に探す</strong>癖をつけてみて。',quote:'「楽しいこと」を羅針盤にして生きるのが、3番のあなたに一番合ってるんだよ。'},
+    direction:{worry:'やりたいことが多すぎて、どれを選べばいいかわからない。結局何者にもなれない気がする。',advice:'3番はやりたいことが多いのが本来の姿なの。<strong>「今一番ワクワクするもの」にフォーカスして動いてみる</strong>のがおすすめ。経験した全てが、やがて一本の線でつながっていくから。',quote:'多才なあなたの「どれも好き」は弱さじゃなくて、豊かさなんだよ。ふふふ♡'}
+  },
+  4:{
+    relationship:{worry:'「こうあるべき」という自分のルールを周りに押しつけてしまって、関係がうまくいかない。',advice:'4番のあなたは<strong>誠実さと責任感が強い分、「きちんとすること」への基準が高い</strong>の。<strong>「人それぞれのやり方がある」を口グセにしてみて</strong>。',quote:'あなたの「きちんとしたい」は美しい。ただそれは、あなただけのものでいいんだよ。'},
+    love:{worry:'安心できる関係を求めすぎて、相手に重く感じさせてしまうことがある。',advice:'4番は<strong>愛情の中に「安心・信頼・継続」を求める</strong>の。<strong>小さなサプライズや、いつもと違う場所へのデートを提案してみて</strong>。安心の中に少しの新鮮さを加えると関係が豊かになるの。',quote:'安定した愛情を育てられるのは、4番の大きな才能なんだよ。'},
+    work:{worry:'地道に頑張っているのに評価されない。コツコツやってきた自分の努力を、誰もわかってくれない。',advice:'4番の努力は静かすぎて、周りに見えていないことがあるよ。<strong>「私はこれをやってきました」と自分から発信すること</strong>も大切なの。',quote:'コツコツ積み上げてきたあなたの努力は、本物の財産なんだよ。'},
+    selfesteem:{worry:'完璧にできないと自己嫌悪に陥る。70点の自分を認められない。',advice:'4番の完璧主義はあなたを成長させる力だけど、使い方を間違えると自分を責める道具になってしまうよ。<strong>「80点の自分に合格点を出す」を練習してみて</strong>。',quote:'毎日続けているあなたは、それだけで十分すごいんだよ。'},
+    motivation:{worry:'計画を立てるのは好きだけど、計画通りにいかないと途端にやる気をなくしてしまう。',advice:'4番は<strong>「計画があること」自体がモチベーション</strong>になるの。<strong>「プランBを最初から作っておく」習慣</strong>をつけてみて。',quote:'計画を立てる力があるあなたは、立て直す力もちゃんと持っているの。'},
+    direction:{worry:'安定を求めすぎて、変化に踏み出せない。このままでいいとわかってはいるけど、何かが違う気もする。',advice:'4番にとって変化は大きなエネルギーを使うもの。<strong>「毎週一つだけ、いつもと違うことをする」</strong>ところから始めてみて。',quote:'あなたの歩みはゆっくりで確実。それがあなたの一番の強さなんだよ。ふふふ♡'}
+  },
+  5:{
+    relationship:{worry:'長く付き合っていると関係がマンネリになってしまう。自由を求める自分と繋がりを大切にしたい自分が矛盾してつらい。',advice:'5番は<strong>刺激と自由を愛する魂</strong>なの。<strong>関係の中に「新しい体験」を意図的に作っていく</strong>のがおすすめ。',quote:'自由を大切にしながら、深く繋がることも5番にはできるんだよ。'},
+    love:{worry:'恋愛に縛られることが怖い。好きなのに、深く関わると逃げたくなってしまう。',advice:'5番にとって<strong>「自分の自由が守られている」という感覚が愛の前提</strong>なの。<strong>「自分のペースと時間を尊重してくれる相手を選ぶ」</strong>ことがとても大切。',quote:'自由を愛するあなたが自由に愛せる関係、ちゃんと存在するんだよ。ふふふ♡'},
+    work:{worry:'一つの仕事が続かない。やりたいことを次々変えてしまって、何も身につかない気がする。',advice:'5番は<strong>多様な経験・変化・スピード感</strong>がある環境で輝くの。「続かない」ことに罪悪感を持たなくていい。<strong>「経験の幅」こそがあなたの資産</strong>なの。',quote:'あなたが経験してきた全ての変化が、唯一無二のキャリアになっているんだよ。'},
+    selfesteem:{worry:'飽きっぽい自分・続かない自分が嫌い。「なんで私はこうなんだろう」と自己嫌悪になる。',advice:'5番の「飽きる」は欠点じゃないの。<strong>「好奇心の範囲が広すぎるだけ」</strong>なの。<strong>「次のことに動いたこと」に注目して</strong>みてね。',quote:'飽きっぽさは「好奇心が旺盛」の別名なんだよ。それはあなたの宝なの。'},
+    motivation:{worry:'ルーティンが続かない。毎日同じことをするのが本当に苦手で、三日坊主ばかり。',advice:'5番にとって<strong>「毎日同じことをする」のは一番向いていないやり方</strong>なの。「週3回はする」「気分に合わせて方法を変えてOK」という柔軟なルールにしてみて。',quote:'ルーティンが続かないのは意志が弱いんじゃなくて、やり方が合っていないだけなんだよ。'},
+    direction:{worry:'やりたいことがありすぎて何から始めればいいかわからない。自由すぎて逆に方向性を見失ってしまう。',advice:'5番は<strong>方向性が「一本の道」じゃなくていい</strong>の。<strong>「今一番ワクワクするもの」だけに今月は集中する</strong>という期限を設けてみて。',quote:'「一つに決めなきゃ」って誰が決めたの？あなたは複数の道を歩いていいんだよ。ふふふ♡'}
+  },
+  6:{
+    relationship:{worry:'人のために動きすぎて、気づいたら自分が疲弊している。なのに「ありがとう」がないと傷ついてしまう。',advice:'6番のあなたは<strong>愛情を「行動で示す」タイプ</strong>なの。<strong>「動く前に一言聞く」習慣</strong>をつけてみて。「手伝おうか？」と聞いてから動くだけで一方的な消耗が減っていくの。',quote:'あなたの愛情は本物。ただ「頼まれてから動く」だけで、もっと伝わりやすくなるんだよ。'},
+    love:{worry:'好きな人に尽くしすぎて、対等な関係を作れない。いつの間にか「都合のいい人」になってしまう。',advice:'6番は<strong>愛することへの喜びが大きい</strong>の。<strong>「してあげること」と同じくらい「してもらうこと」</strong>を意識してみて。',quote:'愛されることを受け取れるようになった時、あなたの恋愛はもっと豊かになるんだよ。ふふふ♡'},
+    work:{worry:'人のためには頑張れるけど、自分のキャリアのことになると後回しにしてしまう。',advice:'6番は<strong>人の役に立つこと・美しさを生み出すこと</strong>が天職に繋がりやすいの。<strong>「人のため」と「自分のキャリア」は矛盾しない</strong>の。',quote:'あなたが輝いている姿が、誰かの光になるんだよ。自分を大切にすることも愛なの。'},
+    selfesteem:{worry:'もっと完璧な母・妻・友人・社員でなければと思って、自分を責め続けてしまう。',advice:'6番の完璧主義があなた自身を苦しめていることに気づいているかな。<strong>「完璧な愛情」より「ありのままの愛情」の方が、相手の心に届く</strong>んだよ。',quote:'あなたはすでに十分愛情深い人なんだよ。それ以上完璧にならなくていいの。'},
+    motivation:{worry:'誰かのためなら頑張れるのに、自分のためだと途端にやる気がなくなる。',advice:'6番のエンジンは<strong>「誰かの笑顔」「誰かの役に立つ感覚」</strong>にあるの。<strong>「これを達成した私が、誰をもっと幸せにできるか」に繋げて考えてみて</strong>。',quote:'「自分が幸せになること」が、誰かへの一番の贈り物になるんだよ。'},
+    direction:{worry:'家族や周りの人を優先しすぎて、自分がどうしたいのかわからなくなってしまった。',advice:'6番のあなたが方向性を見つけるには、<strong>「何をしている時に心が温かくなるか」</strong>を探すことが大切なの。小さな喜びをメモしてみてね。',quote:'周りを幸せにしてきたあなたが、今度は自分を幸せにする番なんだよ。ふふふ♡'}
+  },
+  7:{
+    relationship:{worry:'人と深く関わることが苦手。心を開くのに時間がかかって、誤解されることが多い。',advice:'7番は<strong>信頼関係が育つまでに時間が必要なタイプ</strong>なの。<strong>「実はこう思ってた」を後から伝える習慣</strong>をつけてみて。少しずつ内側を見せていくことで、深い繋がりが生まれていくの。',quote:'心を開くのに時間がかかることは、欠点じゃないの。深く関わるための準備をしているんだよ。'},
+    love:{worry:'好きな人の気持ちを分析しすぎて、自分の感情がわからなくなる。頭でっかちな恋愛になってしまう。',advice:'7番は<strong>恋愛でも「考える」が先に来やすい</strong>の。でも愛は論理で証明できないの。<strong>「今この瞬間、一緒にいて心地よいかどうか」</strong>だけを判断基準にしてみて。',quote:'恋愛は答えを出すものじゃなくて、感じるものなんだよ。あなたの感性を信じてみてね。ふふふ♡'},
+    work:{worry:'専門的な知識はあるのに、それをどう活かせばいいのかわからない。研究や分析で終わって、行動に移れない。',advice:'7番の強みは<strong>「深く掘り下げる力・本質を見抜く力」</strong>なの。<strong>「完全にわかってから行動」より「7割わかったら動く」</strong>を意識してみて。',quote:'あなたの深さは、誰かが求めている答えを持っているんだよ。'},
+    selfesteem:{worry:'自分の考え方や感性が「変わっている」と思われそうで、本音を話せない。周りに合わせて疲れてしまう。',advice:'7番の視点・感性・思考は<strong>確かに独特</strong>なの。でもそれは「おかしい」のではなく、<strong>「深く見えている」から</strong>なんだよ。',quote:'あなたの「変わっている」は、希少な才能の別の名前なんだよ。'},
+    motivation:{worry:'興味のないことは全くやる気が出ない。「意味があるのか」と感じられないと動けない。',advice:'7番のエンジンは<strong>「これには意味がある」「真実に近づいている」という感覚</strong>にあるの。<strong>「なぜこれをするのか」の理由と意味を先に明確にする</strong>と動けるの。',quote:'「意味があること」に全力を注ぐのが、7番のあなたの生き方なんだよ。'},
+    direction:{worry:'考えすぎて決断できない。完璧な答えを探しているうちに、時間だけが過ぎていく。',advice:'7番は<strong>「完璧な答えが出るまで動けない」</strong>という罠にはまりやすいの。<strong>「今持っている情報で、一番納得できる選択をする」</strong>を繰り返していくことがあなたの進み方なの。',quote:'答えを探し続けるあなたへ。動きながら考えることも、立派な探求なんだよ。ふふふ♡'}
+  },
+  8:{
+    relationship:{worry:'仕事や目標に集中しすぎて、大切な人との関係が後回しになってしまう。',advice:'8番のあなたは<strong>目標に向かうエネルギーが強い分、人間関係のメンテナンスを忘れがち</strong>なの。<strong>週に一度「ありがとう」を伝える時間を意図的に作る</strong>だけで変わるの。',quote:'あなたの力強さと、柔らかさの両方を見せてくれると、周りはもっとあなたを好きになるんだよ。'},
+    love:{worry:'強い自分を見せすぎて、パートナーに頼れない。弱さを見せることが怖くて、本当の意味で深い関係が作れない。',advice:'8番は<strong>「強くあること」がアイデンティティ</strong>になりやすいの。でも深い愛の関係は<strong>「弱さを見せ合えること」から育つ</strong>の。',quote:'弱さを見せることは、信頼の証なんだよ。強いあなたが「頼る」と、相手はとても嬉しいの。ふふふ♡'},
+    work:{worry:'もっともっとと追いかけてしまって、どこまで行っても満足できない。成功しても「まだ足りない」と感じてしまう。',advice:'8番は<strong>豊かさを引き寄せる力が強い</strong>の。達成した時に立ち止まって<strong>「今ここにある豊かさに気づく習慣」</strong>をつけてみてね。',quote:'もうすでに、十分すごいところまで来ているんだよ。ちゃんと立ち止まって受け取ってね。'},
+    selfesteem:{worry:'結果を出せない自分を認められない。失敗した時に、自分の価値がないように感じてしまう。',advice:'8番は<strong>「結果＝自分の価値」と無意識に紐付けてしまいやすい</strong>の。<strong>「結果に関わらず、挑戦した自分を認める」</strong>練習をしてみて。',quote:'どんな結果であっても、あなたはあなたのままで価値があるんだよ。'},
+    motivation:{worry:'目標が大きすぎて、途中で疲れてしまう。ゴールが遠くに見えると動けなくなる。',advice:'8番のエンジンは<strong>「達成感・影響力・豊かさが実感できる瞬間」</strong>にあるの。<strong>大きな目標を「90日単位の小さなマイルストーン」に分解</strong>してみて。',quote:'あなたの目標は必ず現実になる。ただそのためには、今日の一歩が全てなんだよ。'},
+    direction:{worry:'お金や地位を目指してきたけど、それで本当に幸せなのか、ふと疑問に感じるようになった。',advice:'8番が真に輝くのは<strong>「自分のパワーを、誰かや社会のために使う」</strong>時なの。<strong>「このパワーで誰を幸せにしたいか・何を変えたいか」</strong>を問いかけてみてね。',quote:'あなたのパワーが「誰かのために」向いた時、本当の豊かさが流れ込んでくるんだよ。ふふふ♡'}
+  },
+  9:{
+    relationship:{worry:'人の痛みや感情を敏感に感じすぎて、気づいたら相手の問題を全部引き受けてしまっている。',advice:'9番のあなたは<strong>包容力と共感力が誰よりも深い</strong>の。<strong>「共感」と「一緒に沈む」は違う</strong>んだよ。「あなたの気持ちはわかるよ、でも私は私でいる」という境界線を持つことが大切なの。',quote:'あなたが守られていてこそ、あなたは誰かを守れるんだよ。'},
+    love:{worry:'過去の恋愛の傷をずっと引きずってしまう。新しい人と関わることへの怖さが抜けない。',advice:'9番は<strong>感情の記憶がとても深い</strong>の。<strong>「あの経験が今の私を作った」</strong>と受け取ることができると、傷が智慧に変わっていくの。',quote:'過去の全てが、あなたをより深く愛せる人にしてくれているんだよ。ふふふ♡'},
+    work:{worry:'人のためになる仕事をしたいけど、食べていけるか不安で踏み出せない。',advice:'9番は<strong>「世界に貢献する」「誰かの人生を変える」</strong>ことが天職に繋がりやすいの。<strong>「これをやり続けたい」という感覚</strong>を信じてみてね。',quote:'あなたがやりたいと感じることの中に、誰かが必要としているものがあるんだよ。'},
+    selfesteem:{worry:'自分を犠牲にしてしまう癖がある。誰かの役に立っている時だけ、自分の存在価値を感じる。',advice:'9番は<strong>奉仕することに喜びを感じる</strong>の。でも<strong>「役に立つかどうかに関係なく、あなたはここにいていい」</strong>を自分に許可してね。',quote:'何もしていないあなたにも、ちゃんと価値があるんだよ。それを受け取ってほしいの。'},
+    motivation:{worry:'大きな理想はあるのに、日々の小さなことが続かない。理想と現実のギャップに疲れてしまう。',advice:'9番は<strong>「大きな理想・ビジョン」が見えている</strong>の。<strong>「この小さな一歩が、大きな理想に繋がっている」という線を意識的に引く</strong>ことが大切なの。',quote:'大きな夢を持つ人の「今日」は、小さいようで大きいんだよ。'},
+    direction:{worry:'何のために生きているのかわからなくなる時がある。使命はあるはずなのに、見えなくなってしまう。',advice:'9番のあなたに伝えたいのは、<strong>使命は「探すもの」じゃなく「気づくもの」</strong>だということ。<strong>「あの時、誰かに喜ばれたこと」をリストアップ</strong>してみてね。',quote:'あなたの使命は、すでにあなたの中に宿っているんだよ。ふふふ♡'}
+  },
+  11:{
+    relationship:{worry:'人のエネルギーを受け取りすぎて、人に会った後にどっと疲れてしまう。人付き合いが怖くなってきた。',advice:'11番のあなたは<strong>感受性のアンテナがとても敏感</strong>なの。<strong>「受け取った後に手放す時間」を必ずセットで持つ</strong>ことが大切。あなただけの浄化の方法を見つけてね。',quote:'敏感なことは才能なの。ただその才能を守るための「バリア」も必要なんだよ。'},
+    love:{worry:'相手の気持ちを敏感に感じすぎて、言われていないことまで気になって消耗してしまう。',advice:'11番は<strong>「相手がどう感じているか」を察する力がずば抜けている</strong>の。<strong>「感じたことを確認する」習慣</strong>をつけてみて。一言聞くだけで、思い込みのループから出られるの。',quote:'あなたの感じる力は、相手をこの上なく大切にできる力でもあるんだよ。'},
+    work:{worry:'感受性が高すぎて、職場の空気や人間関係に消耗してしまう。才能はあると思うのに、活かせていない。',advice:'11番は<strong>インスピレーション・感性・直感力</strong>が仕事の武器になるの。<strong>「感じすぎる職場環境」から離れることも、才能を守るための選択</strong>なの。',quote:'あなたの感性は、正しい場所で使えば、最強の武器になるんだよ。'},
+    selfesteem:{worry:'自分の感じ方が「おかしい」「繊細すぎる」と思って、自分を責めてしまう。',advice:'11番の感受性は<strong>「普通の人の何倍も感じる」ように設定されている</strong>の。<strong>「私は繊細すぎる」ではなく「私は感じる力が高い」</strong>と言い換えてみてね。',quote:'繊細なあなただからこそ、気づけること・感じられること・伝えられることがあるんだよ。ふふふ♡'},
+    motivation:{worry:'直感でやりたいことはわかるのに、現実的な行動に落とし込めない。ビジョンはあるのに動けない。',advice:'11番は<strong>「ビジョンを感じる力」は天才的</strong>なの。<strong>「信頼できる実務タイプの人とチームを組む」</strong>のがおすすめ。一人でやろうとしないこと。',quote:'あなたが「感じる」だけで十分価値があるの。あとは任せる勇気を持てばいいんだよ。'},
+    direction:{worry:'使命がある気はするのに、「私なんかが」と思って表に出ることをためらってしまう。',advice:'11番は<strong>「光を届ける使命」を持って生まれてきた</strong>の。<strong>「完璧になってから」じゃなく「今のままで出て行っていい」</strong>んだよ。',quote:'あなたが光を灯す時、同じ暗さの中にいる誰かが救われるんだよ。ふふふ♡'}
+  },
+  22:{
+    relationship:{worry:'大きなビジョンを持っているのに、周りに理解してもらえない。孤独を感じることが多い。',advice:'22番のあなたは<strong>スケールが大きすぎて、周りが追いつかない</strong>ことがあるの。<strong>あなたのビジョンを面白いと思ってくれる少数の仲間</strong>を大切にしてね。',quote:'あなたのビジョンは大きすぎるんじゃなくて、本物なんだよ。わかる人は必ずいるの。'},
+    love:{worry:'使命感や仕事への情熱が強すぎて、パートナーとの時間を後回しにしてしまう。',advice:'22番は<strong>「世の中を変えたい」という衝動が強い</strong>の。<strong>大切な人との時間を、使命を果たすための燃料として捉え直してみて</strong>ね。',quote:'あなたの隣にいてくれる人は、あなたの使命を支える大切な土台なんだよ。'},
+    work:{worry:'大きな夢はあるのに、プレッシャーで押しつぶされそうになる。「自分にできるのか」という不安が常にある。',advice:'22番は<strong>マスタービルダー</strong>の数字なの。<strong>「一人でやらなくていい」</strong>んだよ。細部は信頼できる人に任せて、全体の設計図に集中することが本来のやり方なの。',quote:'大きなものを建てるのに、一人の力は要らないの。あなたの夢に共鳴する仲間を集めてね。'},
+    selfesteem:{worry:'「もっとできるはず」「まだ足りない」という感覚が止まらない。自分の達成を認められない。',advice:'22番のポテンシャルが大きいからこそ、今の自分が常に不十分に見えるの。<strong>「ここまで来た自分を認める」時間を意図的に作って</strong>みてね。',quote:'あなたはもうすでに、すごいところまで来ているんだよ。ちゃんと振り返って受け取ってね。'},
+    motivation:{worry:'ゴールが大きすぎて、今日何をすればいいのかわからない。漠然とした焦りだけがある。',advice:'22番のエンジンは<strong>「大きな使命と、今日の一歩が繋がっている感覚」</strong>にあるの。<strong>「この大きな夢のために、今日できる一つのこと」を毎朝書く習慣</strong>をつけてみてね。',quote:'大きな夢と今日の一歩を繋ぐ線を引いてみて。そこにあなたの力が宿るの。'},
+    direction:{worry:'自分のやるべきことはわかっているのに、怖くて動けない。失敗したら全てが終わる気がする。',advice:'22番のあなたが感じる恐れは、<strong>「使命の大きさ」に比例している</strong>の。<strong>「7割準備できたら動く」</strong>を意識してみて。動きながら修正していく柔軟さを持つこと。',quote:'怖いと感じるのは、それだけ本気だから。あなたの使命は本物だよ。ふふふ♡'}
+  },
+  33:{
+    relationship:{worry:'誰とでも深く関わろうとしてしまって、気づいたらエネルギーが空っぽになっている。',advice:'33番のあなたは<strong>愛情の器がとても大きい</strong>の。<strong>「深く関わる人を意識的に絞る」</strong>ことが、33番にとってのエネルギー管理なの。',quote:'全員を救わなくていいの。あなたの愛が届く人に、ちゃんと届けてあげてね。'},
+    love:{worry:'愛情が深すぎて、相手にとって重くなってしまうことがある。愛しているのに、関係が壊れていく。',advice:'33番の愛は<strong>「無条件で深い」</strong>の。相手が本当に求めているものを<strong>「聞く」</strong>ことが、33番の愛をより届きやすくするの。愛の形は、相手に合わせて変えていいんだよ。',quote:'愛することと、相手の形に合わせることは、セットなんだよ。ふふふ♡'},
+    work:{worry:'誰かを癒したい・助けたいという気持ちはあるのに、どうビジネスにすればいいかわからない。',advice:'33番は<strong>「教える・癒す・導く」ことが天職</strong>なの。<strong>「お金をもらっていいの？」という罪悪感</strong>を手放してね。あなたが豊かになることで、より多くの人を助けられるの。',quote:'あなたが豊かになることは、世界をもっと優しくすることに繋がっているんだよ。'},
+    selfesteem:{worry:'人のためには全力を出せるのに、自分のことを大切にすることに罪悪感がある。',advice:'33番は<strong>「与えること」に価値を感じる魂</strong>なの。<strong>「自分を満たすことが、最も効率的な愛の実践」</strong>なの。空っぽの自分では誰も助けられないよ。',quote:'あなた自身が一番大切にされるべき存在なんだよ。それを受け取ってほしいの。'},
+    motivation:{worry:'誰かのためなら頑張れるのに、自分ひとりだと怠けてしまう。使命感と怠惰の間で揺れている。',advice:'33番は<strong>「誰かのために」が最大の燃料</strong>なの。<strong>「この行動が誰の役に立つか」を常に明確にしておく</strong>ことが大切。',quote:'誰かのために動けるあなたの力は、本物の強さなんだよ。'},
+    direction:{worry:'愛することに全力を注いできたけど、自分の人生を生きていない気がしてきた。',advice:'33番のあなたへ。<strong>「愛を与えること」と「自分の人生を生きること」は矛盾しない</strong>の。<strong>「自分がどう生きたいか」を一度だけ、誰のことも考えずに書き出してみて</strong>ね。',quote:'あなたの人生はあなたのもの。愛しながら、自分も生きていいんだよ。ふふふ♡'}
+  }
+};
+
+const NGOK = {
+  1:{ng:['全部一人でやろうとして、気づいたら孤立している','人に頼ることを「弱さ」だと思い、何でも断ってしまう','自分が正しいと思いすぎて、人の意見を聞けない','結果が出るまで休めず、そのまま燃え尽きてしまう','失敗を極端に恐れて、最初の一歩が踏み出せない','人のペースの遅さにイライラして、関係を壊してしまう','「私がやらなきゃ」という使命感で、限界まで動いてしまう','負けを認められず、素直に謝ることができない','やりたいことを全部同時に始めて、全部中途半端になる','孤独を感じても「大丈夫」と強がり、助けを求めない'],ok:['「今日一つだけ誰かに頼る」を毎日の小さな練習にする','失敗を「データ収集」と捉えて、次の行動に活かす','自分のペースを守れる環境を、意識的に選んでいく','「完璧じゃなくて80点でOK」を自分に許可する','褒められた時に言い訳せず、素直に「ありがとう」と受け取る','休むことを「次のための充電時間」と定義し直す','自分の意見と同じくらい、人の視点も面白がって聞いてみる','小さな成功を毎日一つメモして、自信を積み上げる','「先頭じゃなくても輝ける」場面を意識して探す','信頼できる人に、週に一度「本音」を話す時間を作る']},
+  2:{ng:['頼まれていないのに先回りして動き、気づいたら疲弊している','「NO」と言えずに引き受けすぎて、自分のことが後回しになる','相手の顔色を読みすぎて、自分の本音がわからなくなる','傷ついてもニコニコして「大丈夫」と言い続けてしまう','誰かに依存しすぎて、一人でいることへの不安が強くなる','感情の波に飲み込まれて、判断力が落ちてしまう','人間関係に疲れても「休みたい」と言えない','自分が我慢すれば丸く収まると思って、ずっと飲み込んでいる','共感しすぎて、相手の感情を自分のものとして背負いすぎる','ちょっとした言葉にズキッときて、何日も引きずってしまう'],ok:['「今日だけは自分のやりたいことを優先する」と決めて動く','一日一回、鏡の前で「今どんな気持ち？」と自分に聞いてみる','「NO」を伝える練習を、小さなことから少しずつ始める','誰かのためではなく、純粋に自分が好きなことに時間を使う','感情が揺れた時は、言葉にする前に少し時間を置いてみる','自分の繊細さを「弱さ」でなく「高感度センサー」と捉え直す','信頼できる人だけに、深く関わるように環境を絞る','一人の時間を「孤独」ではなく「充電」として意識的に作る','「助けてほしい」を声に出すことも、大切な自己表現と知る','自分の気持ちをノートに書き出して、感情を整理する習慣をつける']},
+  3:{ng:['楽しくないことを義務感で続けて、エネルギーが枯渇してしまう','「どうせ私の表現なんて」と、発信する前から諦めてしまう','気分の波が激しく、テンションが低い日に大切な人を傷つける','飽きたら途中で全部やめてしまい、何も完成しない','人の目を気にしすぎて、本当に言いたいことを言えない','SNSのいいね数や反応で、自分の価値を測ってしまう','楽しいことばかり追いかけて、やるべきことを先延ばしにする','自分の感情を表に出しすぎて、周りが振り回される','ネガティブな感情を笑いに変えて、本音を隠してしまう','アイデアが浮かぶたびに飛びつき、全部中途半端になる'],ok:['「楽しいかどうか」を、行動の基準として堂々と使う','完成度より「出してみた事実」を自分に褒める習慣をつける','気分が乗らない日は、無理せず「今日は充電日」と決める','飽きても「やめる」ではなく「アップデートする」と捉え直す','自分の表現・作品を、自分が一番のファンとして楽しむ','感情は出してOK、ただ「タイミング」だけ少し意識する','一つのことをひと段落まで完成させてから次に移る練習をする','喜びを人とシェアすることで、場の空気を明るくする才能を使う','「反応がなくても、出し続ける」を自分のルールにする','好奇心が動く方向に素直に進んで、その経験を言語化してみる']},
+  4:{ng:['100点でないと満足できず、完成物を外に出せない','変化を怖がりすぎて、新しい可能性を全部シャットアウトする','「こうじゃなきゃ」というこだわりで、周りに融通が利かない','休むことに罪悪感があって、限界まで動き続けてしまう','努力を認めてもらえないと、強い不満や怒りを感じる','計画通りにいかないと頭が真っ白になり、立ち止まってしまう','真面目さゆえに、冗談が通じない空気を作ってしまう','安定を求めすぎて、チャンスが来ても動けない','マニュアルや手順へのこだわりが強く、例外を認めにくい','自分に厳しい基準を課すのと同じ基準を、人にも求めてしまう'],ok:['「80点で完成」を合格ラインとして、世に出すことに慣れていく','小さな変化を週一つだけ試してみて、変化に慣れる体験を積む','コツコツ続けてきた自分を、第三者の目で見て褒めてあげる','「今日は休む」という予定を、スケジュールに先に入れてしまう','計画が崩れたら「ここから立て直す」という別の計画を立てる','自分のルールを人に押しつけず、「人それぞれ」を口グセにする','真面目さと遊び心を、場面で意識的に使い分けてみる','積み上げた実績・継続してきた事実を自信の根拠にする','完璧主義が出そうな時は「これは誰の基準？」と自分に聞く','安定の中に「ミニ冒険」をひとつ仕込んで、刺激と安心を両立する']},
+  5:{ng:['一カ所に縛られることを恐れすぎて、定着できずに流れ続ける','ルーティンを全て窮屈と感じて、良い習慣まで壊してしまう','飽きたらすぐ全部リセットして、積み上げたものを捨てる','衝動的に大きな決断をして、後から後悔することが多い','責任から逃げるために「次へ行こう」と使ってしまう','刺激を求めすぎて、人間関係が長続きしない','自由を盾にして、約束や期限を軽く見てしまう','常に動いているせいで、自分の内面と向き合えない','やりたいことが多すぎて、エネルギーが分散しきっている','変化が怖くて動けない人を「もったいない」と責めてしまう'],ok:['「変化」を逃げのツールではなく、成長のエンジンとして使う','自分だけの自由の形を見つけて、それを守るルールを作る','新しいことに飛び込む時は「一つ終わらせてから」を習慣にする','衝動が来たら24時間だけ待って、それでもやりたければ動く','「飽きた」の中に「次に活かせること」を探してから離れる','移動・旅・体験に好奇心を向けて、インプットの質を上げる','「続けること」も才能と知り、小さな継続を誇りにする','刺激の中に「深く潜る瞬間」を意識的に作る','一人の静かな時間を、内側の声を聞く時間として活用する','変化と継続のバランスを「自分のリズム」として意識する']},
+  6:{ng:['頼まれていないのに世話を焼いて、相手の成長を止めてしまう','自分が犠牲になれば丸く収まると思い、境界線がなくなる','誰かの選択・生き方に「もっとこうすればいいのに」と干渉する','愛情の見返りを無意識に求めて、報われないと落ち込む','「ちゃんとしなきゃ」と自分を追いかけ、完璧な愛情を求めすぎる','家族や大切な人のことを心配しすぎて、自分が消耗する','断れずに全員の役に立とうとして、誰に対しても薄くなる','問題を見つけると放っておけず、首を突っ込みすぎる','与えることに集中しすぎて、自分が空っぽになることに気づかない','「私がいないとダメ」という思い込みで、手放せなくなる'],ok:['「手伝おうか？」と一声かけてから動く習慣をつける','自分を満たすことを、誰かを助けることより先にする','相手の選択を尊重して「見守る」という愛情の形も持つ','見返りを求めない愛情と、対等な関係のバランスを意識する','「完璧な愛情」より「ありのままの愛情」を大切にする','自分の好きなこと・楽しいことに罪悪感なく時間を使う','助けを求めてきた人だけに、エネルギーを注ぐ線引きをする','美しいものや心地よい空間に触れる時間を、定期的に作る','誰かの役に立てた時に、自分も「よかった」と素直に喜ぶ','「手放すことも愛」と知り、べったり関わることをやめてみる']},
+  7:{ng:['答えが出るまで動けなくて、ずっと考え込んだまま時間が過ぎる','人を信頼できず、心の壁を作りすぎて孤立してしまう','感情より理論を優先しすぎて、人間関係が冷たくなる','「完全に理解してから」という条件で、何でも先延ばしする','一人の世界に入りすぎて、現実の行動が止まってしまう','疑い深くなりすぎて、チャンスや縁を遠ざけてしまう','自分の考えや感性を「変わってる」と思って隠してしまう','完璧な分析を求めすぎて、シンプルなことを複雑にする','批判されることを恐れて、本当の意見を口にできない','人に誤解されたまま放置して、関係が静かに壊れていく'],ok:['「まだわからない」をそのまま楽しめる余白を意識的に作る','一人で抱えている考えを、少しずつ信頼できる人に見せてみる','直感と分析の両方を使って、一つの判断を出す練習をする','一人の深い時間を、消耗ではなく「魂の充電」として使う','自分の独特な視点や感性を「才能」として受け入れる','考えが深まったら、インプットだけでなくアウトプットにもつなげる','「答えが出なくても動いていい」を自分に許可する','月に一度、自分の気持ちや思考を書き出して整理する時間を作る','信頼できる相手に「これ変かな」と聞けるようになる','知識や洞察を誰かのために使う場面を、積極的に作っていく']},
+  8:{ng:['休むことを「サボり」と感じて、限界まで動き続けてしまう','お金・地位・評価への執着が強くなり、手段が目的になってしまう','弱みを見せることを恥と思い、何でも一人で解決しようとする','結果が全てと考えすぎて、プロセスや人の感情を軽視する','支配的なコミュニケーションになり、周りが萎縮してしまう','「もっとできるはず」と自分を追い込み、永遠に満足できない','権力や影響力を持った時に、人への配慮が薄れてしまう','勝ち負けで物事を測りすぎて、本質的な豊かさを見落とす','失敗を許せず、自分にも人にも厳しすぎる評価をする','お金や成功が増えるほど、孤独感が深まっていることに気づかない'],ok:['「豊かさを受け取ること」にも、与えることと同じだけ慣れていく','弱みを見せることも「信頼関係を深める強さ」と知る','達成した自分を、評価抜きで素直に褒める時間を作る','結果と同じくらい、過程の中にある小さな喜びを大切にする','自分のパワーを「人を動かすため」ではなく「人のために」使う','定期的に立ち止まって「これは本当にやりたいこと？」と問う','信頼できる人に「助けてほしい」と素直に伝える練習をする','お金は「使うもの」であり「流すもの」という感覚を育てる','意図的に休む時間を作り、「休んでいる自分」も認める','自分の影響力を使って、誰かが輝く場面を作ることを楽しむ']},
+  9:{ng:['過去の傷や後悔を手放せず、いつまでも引きずってしまう','誰かのためにと動きすぎて、自分のニーズが後回しになる','感情を飲み込んで「大丈夫」と言い続け、爆発してしまう','全員を救おうとして、誰に対しても中途半端になる','終わらせること・手放すことへの恐れで、前に進めない','理想が高すぎて、現実の自分や相手に失望しやすい','犠牲になることで、愛されていると感じてしまうパターンがある','人の痛みに共感しすぎて、自分まで消耗してしまう','完璧な奉仕を自分に求めて、少しのミスで自己嫌悪に陥る','感傷的になりすぎて、現実的な判断ができなくなる'],ok:['過去の経験を「財産」として棚卸しして、今に活かす視点を持つ','自分への慈愛を、誰かへの慈愛と同じ量だけ向けてあげる','感情は感じていい、ただ「一人で抱えない」を意識する','「手放すことが次の始まり」という感覚を、少しずつ育てる','関わる人・場所・関係を意識的に選んで、エネルギーを守る','「全員を助けなくていい」という境界線を持つことを許可する','自分の智慧・経験を必要な人に届けることで使命感を満たす','理想を「目標」として掲げながら、今の現実も愛せるようにする','定期的に自然の中に出て、感情をリセットする時間を作る','「もう十分やっている」という言葉を、自分にかけてあげる習慣をつける']},
+  11:{ng:['直感が来ても「気のせいかも」と打ち消して、後悔することが多い','繊細すぎる自分を責めて、感受性を「欠点」だと思い込む','理想と現実のギャップに苦しみ、何もできないと感じてしまう','光と影の両方の感情を行き来して、精神的に不安定になりやすい','人のエネルギーを受け取りすぎて、気づいたらぐったりしている','使命感が強すぎて、自分の限界を無視して走り続けてしまう','完璧なビジョンを描きすぎて、現実の行動に移れない','繊細さを隠すために、強がりや冗談で本音をカモフラージュする','自己評価が低く「自分なんかが」と、発信や行動をためらう','他人の批判に過敏に反応して、深く傷ついてしまう'],ok:['「なんとなく」という感覚を、大切な情報として記録して使う','繊細さに見合うだけの休息・回復の時間を意識的に確保する','理想を「方向性の地図」として持ちながら、今日一歩だけ動く','人混みやノイズから離れる時間を、意図的にスケジュールに入れる','自分の独特な感性や直感を、「才能」として人のために使い始める','インスピレーションが来たら、すぐにメモして逃さない習慣をつける','自己評価を上げるために「今日できたこと」を毎晩三つ書く','信頼できる少人数と深く繋がり、エネルギーを守る環境を作る','光も影も自分の一部と受け入れて、どちらも否定しない','「自分の経験を誰かのために語ること」を、使命の一つとして持つ']},
+  22:{ng:['一人で全責任を背負い込んで、気づいたら孤立無援になっている','大きすぎる使命感にプレッシャーを感じて、動けなくなる','完璧な計画が揃うまで待ち続けて、いつまでも動き出せない','「もっとできるはず」と自分を追い込み、休めなくなる','孤独感を感じても助けを求めず、一人で全部やろうとする','スケールの大きな夢を人に話して、否定されると深く傷つく','細部にこだわりすぎて、全体の流れが止まってしまう','人を育てることが苦手で、自分でやった方が早いと一人でやる','プレッシャーを感じると身体に出やすいのに、無視して進む','理想の実現に執着するあまり、今の幸せを見落としてしまう'],ok:['大きなビジョンを、今週できる小さな一歩に分解して動く','信頼できる仲間に役割を渡して、一人でやらないことを覚える','「今できること」から着実に動き、完璧を後から追いかける','プレッシャーを「使命が来た合図」として捉え直して力に変える','夢を人に話す相手を、信頼できる数人に絞って大切に話す','自分の進捗を定期的に振り返り「ここまで来た」を認める','身体のサインを無視せず、疲れたら早めに立ち止まる習慣をつける','「完成してから」ではなく「途中から仲間を巻き込む」を意識する','今この瞬間の小さな幸せにも、ちゃんと目を向ける練習をする','夢を形にしていく過程そのものを、誰かのインスピレーションにする']},
+  33:{ng:['自分が空っぽでも「誰かのために」と与え続けて、倒れてしまう','感情の波が大きすぎて、自分でもコントロールできなくなる','他者の苦しみを全部自分のものとして引き受けてしまう','愛するがゆえに、相手の考えや生き方を変えようとしてしまう','自分のニーズを「わがまま」だと感じて、全部後回しにする','愛情表現が重くなりすぎて、相手に負担をかけてしまう','傷つくことを恐れて、深い関係を避けてしまうことがある','完璧な愛・完璧な奉仕を自分に求めて、燃え尽きてしまう','「あなたのために言ってるの」という言葉で、支配になっている','感情を抑えすぎてある時一気に溢れ、関係を壊してしまうことがある'],ok:['自分の器を愛で満たしてから、人に与える順番を守る','感情の波を感じながらも、波に飲み込まれない練習をする','「共感」と「同化」の境界線を、意識的に引く習慣をつける','ありのままの相手を受け入れて、変えようとしないことを愛とする','自分のニーズを大切にすることが、相手への最高の愛と知る','愛情表現は「言葉」「行動」「時間」を使い分けて、軽やかに届ける','傷つくことを恐れず、深い繋がりの中でこそ輝けると知る','奉仕の量より「質」を意識して、深く関わる人を絞っていく','自分の感情を週一回はノートに書き出して、解放する習慣をつける','「愛される練習」として、人の好意をそのまま受け取れるようになる']}
+};
+
+let currentNum = null;
+
+function calcLifePath(y,m,d){
+  var s = String(y)+String(m)+String(d);
+  var sum = s.split('').reduce(function(a,b){return a+parseInt(b);},0);
+  while(sum>9 && sum!==11 && sum!==22 && sum!==33){
+    sum = String(sum).split('').reduce(function(a,b){return a+parseInt(b);},0);
+  }
+  return sum;
+}
+
+function calculate(){
+  var y=document.getElementById('year').value, m=document.getElementById('month').value, d=document.getElementById('day').value;
+  if(!y||!m||!d) return;
+  var num=calcLifePath(y,m,d);
+  currentNum=num;
+  document.getElementById('resultNum').textContent=num;
+  document.getElementById('resultKeyword').textContent=NUMBERS[num].keyword;
+  document.getElementById('result').classList.add('show');
+}
+
+function showHome(){
+  document.getElementById('home-page').style.display='block';
+  document.getElementById('number-page').classList.remove('show');
+  document.getElementById('backBtn').classList.remove('show');
+  window.scrollTo(0,0);
+}
+
+function goToNumber(num){
+  var data=NUMBERS[num], color=NUMBER_COLORS[num], topics=TD[num], ngok=NGOK[num];
+  document.documentElement.style.setProperty('--num-color',color);
+  document.getElementById('numBadge').textContent=num;
+  document.getElementById('numBadge').style.background=color;
+  document.getElementById('numTitle').textContent='Number '+num;
+  document.getElementById('numSubtitle').textContent=data.subtitle;
+  document.getElementById('numEssence').textContent=data.essence;
+  document.getElementById('numTraits').innerHTML=data.traits.map(function(t){return '<span class="trait-tag" style="border:1px solid '+color+';color:'+color+'">'+t+'</span>';}).join('');
+  document.getElementById('numHeroBg').style.background='linear-gradient(180deg,'+color+'44 0%,var(--bg) 100%)';
+
+  document.getElementById('numTopics').innerHTML=TOPICS.map(function(topic,i){
+    var td=topics[topic.key];
+    var adviceLines=td.advice.split('\n\n').map(function(p){return '<p class="advice-text">'+p+'</p>';}).join('');
+    return '<div class="topic-section"><div class="topic-header"><div class="topic-icon" style="background:'+color+'">'+topic.icon+'</div><div><div class="topic-title">'+topic.title+'</div><div class="topic-sub">'+topic.sub+'</div></div></div><div class="worry-card"><div class="worry-label">よくある悩み</div><div class="worry-text">「'+td.worry+'」</div><div class="divider" style="background:linear-gradient(90deg,transparent,'+color+',transparent)"></div><div class="advice-label" style="color:'+color+'">ナンバーちゃんからのアドバイス ✦</div>'+adviceLines+'<div class="chan-quote"><div class="chan-quote-name">✦ ナンバーちゃんより</div><div class="chan-quote-text">'+td.quote+'</div></div></div></div>';
+  }).join('');
+
+  document.getElementById('numNgok').innerHTML='<div class="ngok-header"><span class="ngok-header-eyebrow">✦ &nbsp; N G &nbsp; / &nbsp; O K &nbsp; ✦</span><h2 class="ngok-header-title">悩んだ時のNG行動・OK行動</h2></div><div class="ngok-grid"><div class="ngok-col"><div class="ngok-col-header ng"><div class="ngok-badge ng">NG</div><div class="ngok-col-title ng">やりがちなNG行動 10選</div></div><div class="ngok-list">'+ngok.ng.map(function(item,i){return '<div class="ngok-item"><span class="ngok-num">'+(i+1)+'.</span><span>'+item+'</span></div>';}).join('')+'</div></div><div class="ngok-col"><div class="ngok-col-header ok"><div class="ngok-badge ok">OK</div><div class="ngok-col-title ok">取り入れたいOK行動 10選</div></div><div class="ngok-list">'+ngok.ok.map(function(item,i){return '<div class="ngok-item"><span class="ngok-num">'+(i+1)+'.</span><span>'+item+'</span></div>';}).join('')+'</div></div></div>';
+
+  document.getElementById('home-page').style.display='none';
+  document.getElementById('number-page').classList.add('show');
+  document.getElementById('backBtn').classList.add('show');
+  window.scrollTo(0,0);
+}
+
+// 数字グリッド
+var grid=document.getElementById('numGrid');
+[1,2,3,4,5,6,7,8,9,11,22,33].forEach(function(n){
+  var color=NUMBER_COLORS[n];
+  var card=document.createElement('div');
+  card.className='num-card';
+  card.innerHTML='<div class="num-card-number" style="color:'+color+'">'+n+'</div><div class="num-card-keyword">'+NUMBERS[n].keyword+'</div>';
+  card.onclick=function(){goToNumber(n);};
+  grid.appendChild(card);
+});
+
+// スクロールリビール
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+</script>
+</body>
+</html>
